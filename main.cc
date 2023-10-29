@@ -9,7 +9,7 @@
 
 color ray_color (const ray& r, const hittable& world) {
     hit_record rec;
-    if(world.hit(r, 0, infinity, rec)) {
+    if (world.hit(r, 0, infinity, rec)) {
         return 0.5 * (rec.normal + color(1,1,1));
     }
 
@@ -35,8 +35,9 @@ int main() {
     // WORLD RENDERING 
 
     hittable_list world;
+
     world.add(make_shared<sphere>(point3(0,0,-1), 0.5));
-    world.add(make_shared<sphere>(point3(0, -100.5, -1), 100));
+    world.add(make_shared<sphere>(point3(0,-100.5,-1), 100));
 
     // Render viewport (from where we will be looking at the 3D space) 
     // We are using real ratio instead of ideal ratio.
