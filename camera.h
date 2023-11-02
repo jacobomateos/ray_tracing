@@ -18,7 +18,8 @@ class camera {
     // Aspect ratio
     double aspect_ratio = 16.0 / 9.0; // image width over height ratio.
     int image_width = 800; // Rendered image width in pixel count.
-    int samples_per_pixel = 10; //Count of random samples for each pixel
+    int samples_per_pixel = 10; //Count of random samples for each pixel.
+    int max_depth = 10; // Max number of ray bounces into scene.
 
     void render(const hittable &world) {
         initialize();
@@ -33,7 +34,7 @@ class camera {
                 color pixel_color(0,0,0);
                 for (int sample = 0; sample < samples_per_pixel; ++sample){
                     ray r = get_ray(i, j);
-                    pixel_color += ray_color(r, world);
+                    pixel_color += ray_color(r, max_depth, world);
                 }
                 write_color(std::cout, pixel_color, samples_per_pixel);
             }
@@ -80,17 +81,25 @@ class camera {
         pixel00_loc = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
     }
 
-    color ray_color(const ray& r, const hittable& world) const {
+    color ray_color(const ray& r, int depth, const hittable& world) const {
         hit_record rec;
-        if (world.hit(r, interval(0, infinity), rec)) {
-            vec3 direction = random_on_hemisphere(rec.normal);
-            return 0.5 * ray_color(ray(rec.p, direction), world);
+
+        
+        //If we've exceeded the ray bount limit, no more light is gathered.
+        if (depth <= 0)
+            return color(0,0,0);
+
+
+        if (world.hit(r, interval(0.0001, infinity), rec)) {
+            vec3 direction = rec.normal + random_unit_vector();
+            return 0.5 * ray_color(ray(rec.p, direction), depth-1, world);
         }
 
         vec3 unit_direction = unit_vector(r.direction());
         auto a = 0.5*(unit_direction.y() + 1.0);
         return (1.0-a)*color(1.0, 1.0, 1.0) + a*color(0.5, 0.7, 1.0);
     }
+
     ray get_ray(int i, int j) const {
         // Get a random sampled camera ray for the pixel at location i, j.
         auto pixel_center = pixel00_loc + (i * pixel_delta_u) + (j * pixel_delta_v);
