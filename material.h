@@ -2,17 +2,14 @@
 #define MATERIAL_H
 
 #include "rtweekend.h"
+#include "hittable_list.h"
 
-class material;
-
-class hit_record;
-
-class material{
-    public:
+class material {
+  public:
     virtual ~material() = default;
-    virtual bool scatter (
-        const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered) const = 0;
 
+    virtual bool scatter(
+        const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered) const = 0;
 };
 
 class lambertian : public material {
@@ -36,6 +33,13 @@ class lambertian : public material {
 class metal : public material {
     public:
     metal(const color& a) : albedo(a) {}
+
+    bool scatter(const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered) const override {
+        vec3 reflected = reflect(unit_vector(r_in.direction()), rec.normal);
+        scattered = ray(rec.p, reflected);
+        attenuation = albedo;
+        return true;
+    }
 
 
     private:
