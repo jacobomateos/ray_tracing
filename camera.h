@@ -22,6 +22,8 @@ class camera {
     int samples_per_pixel = 10; //Count of random samples for each pixel.
     int max_depth = 10; // Max number of ray bounces into scene.
 
+    double vertical_field_view = 90; // Vertical view angle (field of view)
+
     void render(const hittable &world) {
         initialize();
 
@@ -58,16 +60,17 @@ class camera {
         //Make the image height at least 1 pixel.
         image_height = (image_height < 1) ? 1 : image_height;
         
-        // Render viewport (from where we will be looking at the 3D space) 
-        // We are using real ratio instead of ideal ratio.
-
-        auto viewport_height = 2.0;
-        auto viewport_width = viewport_height * (static_cast<double>(image_width)/image_height);
-
+        
         // Camera center
         camera_center = point3(0, 0, 0);
         auto focal_length = 1.0;
-
+        auto theta_field_view = degrees_to_radians(vertical_field_view);
+        auto h = tan(theta_field_view/2);
+        
+        // Render viewport (from where we will be looking at the 3D space) 
+        auto viewport_height = 2 * h * focal_length;
+        auto viewport_width = viewport_height * (static_cast<double>(image_width)/image_height);
+        
         // Position to start rendering the view
         auto viewport_u = vec3(viewport_width, 0, 0);
         auto viewport_v = vec3(0, -viewport_height, 0);
