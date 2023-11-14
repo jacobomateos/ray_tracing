@@ -7,8 +7,8 @@
 
 class cuboid : public hittable {
     public:
-    cuboid(point3 _center, double _height, double _width, double _depth, double _radius, shared_ptr<material> _material) 
-        : center(_center), height(_height), width(_width), depth(_depth), radius(_radius), mat(_material) {}
+    cuboid(point3 _center, double _height, double _width, double _depth, shared_ptr<material> _material) 
+        : center(_center), height(_height), width(_width), depth(_depth), mat(_material) {}
     
     bool hit(const ray& r, interval ray_t, hit_record& rec) const override {
         // Define the min and max points of the cuboid.
@@ -61,7 +61,7 @@ class cuboid : public hittable {
 
     private:
     point3 center;
-    double height, width, depth, radius;
+    double height, width, depth;
     shared_ptr<material> mat;
 };
 
