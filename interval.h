@@ -24,6 +24,15 @@ class interval{
         return x;
     }
 
+    double size() {
+        return max - min;
+    }
+
+    interval expand(double delta){
+        auto padding = delta/2;
+        return interval(min-padding, max+padding);
+    }
+
     static const interval empty, universe;
 };
 
