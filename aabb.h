@@ -49,6 +49,6 @@ class aabb {
         return true;
     }
 
-};
+}; 
 
 #endif
