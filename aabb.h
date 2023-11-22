@@ -23,6 +23,14 @@ class aabb {
         z = interval(box0.z, box1.z);
     }
 
+    aabb pad() {
+        // Return an AABB with no side smaller than delta, by adding padding.
+        double delta = 0.0001;
+        interval new_x = (x.size() >= delta) ? x : x.expand(delta);
+        interval new_y = (y.size() >= delta) ? y : y.expand(delta);
+        interval new_z = (z.size() >= delta) ? z : z.expand(delta);
+    }
+
     const interval& axis(int n) const {
         if (n == 1) return y;
         if (n == 2) return z;
