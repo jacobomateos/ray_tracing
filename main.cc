@@ -6,7 +6,6 @@
 #include "hittable_list.h"
 #include "material.h"
 #include "sphere.h"
-#include "cuboid.h"
 
 #include <iostream>
 
