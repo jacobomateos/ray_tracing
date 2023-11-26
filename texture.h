@@ -23,5 +23,4 @@ class solid_color : public texture {
 }
 
 
-
 #endif
