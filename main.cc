@@ -6,11 +6,11 @@
 #include "hittable_list.h"
 #include "material.h"
 #include "sphere.h"
+#include "texture.h"
 
 #include <iostream>
 
-int main() {
-    
+void random_spheres() {
     hittable_list world;
 
     auto ground_material = make_shared<lambertian>(color(0.5, 0.5, 0.5));
@@ -71,4 +71,37 @@ int main() {
     cam.focus_distance = 10.0;
 
     cam.render(world);
+}
+
+void two_spheres(){
+    hittable_list world;
+
+    auto checker = make_shared<checker_texture>(0.8, color(.2, .3, .1), color(.9, .9, .9));
+
+    world.add(make_shared<sphere>(point3(0,-10, 0), 10, make_shared<lambertian>(checker)));
+    world.add(make_shared<sphere>(point3(0, 10, 0), 10, make_shared<lambertian>(checker)));
+
+    camera cam;
+
+    cam.aspect_ratio      = 16.0 / 9.0;
+    cam.image_width       = 400;
+    cam.samples_per_pixel = 100;
+    cam.max_depth         = 50;
+
+    cam.vertical_field_view = 20;
+    cam.lookfrom = point3(13,2,3);
+    cam.lookat = point3(0,0,0);
+    cam.v_up = vec3(0,1,0);
+
+    cam.defocus_angle = 0;
+
+    cam.render(world);
+}
+
+int main() {
+    switch (2)
+    {
+    case 1: random_spheres(); break;
+    case 2: two_spheres(); break;
+    }
 }
